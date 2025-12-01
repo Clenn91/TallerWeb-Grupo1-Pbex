@@ -1,0 +1,9 @@
+{
+  "endpoint": "/health",
+  "iterations": 20,
+  "okResponses": 20,
+  "totalMs": 96.81620000000021,
+  "avgMs": 4.84081000000001,
+  "maxAvgMs": 500,
+  "timestamp": "2025-12-01T14:05:48.718Z"
+}

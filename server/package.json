@@ -11,7 +11,12 @@
     "init-db": "tsx scripts/initDatabase.ts",
     "seed": "tsx scripts/seedData.ts",
     "migrate": "tsx scripts/migrate.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test:unit": "tsx ../test/unit/generateProductCode.unit.test.ts",
+    "test:functional": "tsx ../test/functional/health.functional.test.ts",
+    "test:performance": "tsx ../test/performance/health.performance.test.ts",
+    "test:all-core": "npm run test:unit && npm run test:functional && npm run test:performance",
+    "test": "tsx scripts/runTestsAndReport.ts"
   },
   "keywords": [
     "pbex",
