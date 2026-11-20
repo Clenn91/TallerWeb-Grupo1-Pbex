@@ -113,13 +113,13 @@ const Dashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-primary-700">Dashboard</h1>
           <p className="mt-1 text-sm text-gray-500">
             Bienvenido, {user?.fullName}
           </p>
         </div>
         <button onClick={handleExport} className="btn btn-secondary">
-          📥 Exportar Reporte
+          Exportar Reporte
         </button>
       </div>
 
@@ -128,10 +128,11 @@ const Dashboard = () => {
         <h3 className="text-lg font-semibold mb-4">Filtros</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="dashboard-start" className="block text-sm font-medium text-gray-700 mb-1">
               Fecha Inicio
             </label>
             <input
+              id="dashboard-start"
               type="date"
               className="input w-full"
               value={filters.startDate}
@@ -139,10 +140,11 @@ const Dashboard = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="dashboard-end" className="block text-sm font-medium text-gray-700 mb-1">
               Fecha Fin
             </label>
             <input
+              id="dashboard-end"
               type="date"
               className="input w-full"
               value={filters.endDate}
@@ -150,10 +152,11 @@ const Dashboard = () => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="dashboard-product" className="block text-sm font-medium text-gray-700 mb-1">
               Producto
             </label>
             <select
+              id="dashboard-product"
               className="input w-full"
               value={filters.productId}
               onChange={(e) => setFilters({ ...filters, productId: e.target.value })}
@@ -181,13 +184,13 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Link
           to="/dashboard/quality/register"
-          className="card hover:shadow-lg transition-shadow cursor-pointer"
+          className="card hover:border-primary-300 transition-colors cursor-pointer"
         >
           <h3 className="text-sm font-medium text-gray-500">Total Producido</h3>
-          <p className="mt-2 text-3xl font-bold text-gray-900">
+          <p className="mt-2 text-3xl font-bold text-primary-700">
             {metrics?.production?.totalProduced?.toLocaleString() || 0}
           </p>
-          <p className="mt-1 text-xs text-gray-400">Click para ver detalles</p>
+          <p className="mt-1 text-sm text-gray-500">Ver detalles</p>
         </Link>
         <div className="card">
           <h3 className="text-sm font-medium text-gray-500">Tasa de Aprobación</h3>
@@ -203,13 +206,13 @@ const Dashboard = () => {
         </div>
         <Link
           to="/dashboard/alerts"
-          className="card hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-red-500"
+          className="card hover:border-primary-300 transition-colors cursor-pointer border-l-4 border-red-500"
         >
           <h3 className="text-sm font-medium text-gray-500">Alertas Activas</h3>
           <p className="mt-2 text-3xl font-bold text-red-600">
             {metrics?.alerts?.active || 0}
           </p>
-          <p className="mt-1 text-xs text-gray-400">Click para ver alertas</p>
+          <p className="mt-1 text-sm text-gray-500">Ver alertas</p>
         </Link>
       </div>
 
@@ -224,8 +227,8 @@ const Dashboard = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="totalProduced" stroke="#3b82f6" name="Producido" />
-              <Line type="monotone" dataKey="totalApproved" stroke="#10b981" name="Aprobado" />
+              <Line type="monotone" dataKey="totalProduced" stroke="#073477" name="Producido" />
+              <Line type="monotone" dataKey="totalApproved" stroke="#167b9e" name="Aprobado" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -239,7 +242,7 @@ const Dashboard = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="totalProduced" fill="#3b82f6" name="Total Producido" />
+              <Bar dataKey="totalProduced" fill="#073477" name="Total Producido" />
             </BarChart>
           </ResponsiveContainer>
         </div>

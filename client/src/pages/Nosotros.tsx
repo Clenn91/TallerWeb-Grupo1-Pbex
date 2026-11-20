@@ -25,14 +25,14 @@ const Nosotros = () => {
       <section className="about-content-section py-16 bg-gray-50">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Misión y Visión */}
-          <div className="about-grid grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="about-card bg-white rounded-lg shadow-md p-8 text-center">
+          <div className="about-grid grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+            <div className="about-card bg-white rounded-lg border border-gray-200 p-6 sm:p-8 text-center">
               <div className="about-card-icon mb-4">
-                <div className="w-16 h-16 mx-auto bg-primary-100 rounded-full flex items-center justify-center">
-                  <i className="fas fa-bullseye text-3xl text-primary-600"></i>
+                <div className="w-12 h-12 mx-auto bg-primary-50 rounded-md flex items-center justify-center">
+                  <i className="fas fa-bullseye text-2xl text-primary-600"></i>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Nuestra Misión</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary-700">Nuestra Misión</h3>
               <p className="text-gray-700 leading-relaxed">
                 Proporcionar soluciones innovadoras en envases plásticos de la más alta
                 calidad, satisfaciendo las necesidades de nuestros clientes con productos
@@ -40,13 +40,13 @@ const Nosotros = () => {
               </p>
             </div>
 
-            <div className="about-card bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="about-card bg-white rounded-lg border border-gray-200 p-6 sm:p-8 text-center">
               <div className="about-card-icon mb-4">
-                <div className="w-16 h-16 mx-auto bg-primary-100 rounded-full flex items-center justify-center">
-                  <i className="fas fa-eye text-3xl text-primary-600"></i>
+                <div className="w-12 h-12 mx-auto bg-primary-50 rounded-md flex items-center justify-center">
+                  <i className="fas fa-eye text-2xl text-primary-600"></i>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Nuestra Visión</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary-700">Nuestra Visión</h3>
               <p className="text-gray-700 leading-relaxed">
                 Ser reconocidos como la empresa líder en la fabricación y
                 comercialización de envases plásticos en el Perú y Latinoamérica,
@@ -55,13 +55,13 @@ const Nosotros = () => {
               </p>
             </div>
 
-            <div className="about-card bg-white rounded-lg shadow-md p-8 text-center">
+            <div className="about-card bg-white rounded-lg border border-gray-200 p-6 sm:p-8 text-center">
               <div className="about-card-icon mb-4">
-                <div className="w-16 h-16 mx-auto bg-primary-100 rounded-full flex items-center justify-center">
-                  <i className="fas fa-heart text-3xl text-primary-600"></i>
+                <div className="w-12 h-12 mx-auto bg-primary-50 rounded-md flex items-center justify-center">
+                  <i className="fas fa-heart text-2xl text-primary-600"></i>
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Nuestros Valores</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary-700">Nuestros Valores</h3>
               <p className="text-gray-700 leading-relaxed">
                 Integridad, compromiso con la calidad, innovación constante,
                 responsabilidad social y ambiental, y dedicación total al servicio de
@@ -71,8 +71,8 @@ const Nosotros = () => {
           </div>
 
           {/* Historia */}
-          <div className="company-history bg-white rounded-lg shadow-md p-8 mb-16">
-            <h2 className="text-3xl font-bold mb-6 text-gray-900">Nuestra Historia</h2>
+          <div className="company-history bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-10">
+            <h2 className="text-3xl font-bold mb-6 text-primary-700">Nuestra Historia</h2>
             <div className="space-y-4 text-gray-700 leading-relaxed">
               <p>
                 Con décadas de experiencia en la industria del plástico, PBEX (Plásticos
@@ -90,8 +90,8 @@ const Nosotros = () => {
           </div>
 
           {/* Certificaciones */}
-          <div className="certifications bg-white rounded-lg shadow-md p-8 mb-16">
-            <h2 className="text-3xl font-bold mb-6 text-gray-900">
+          <div className="certifications bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-10">
+            <h2 className="text-3xl font-bold mb-6 text-primary-700">
               Certificaciones y Calidad
             </h2>
             <p className="text-gray-700 leading-relaxed mb-8">
@@ -117,35 +117,35 @@ const Nosotros = () => {
           </div>
 
           {/* Por qué elegirnos */}
-          <div className="why-choose-us bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">
+          <div className="why-choose-us bg-white rounded-lg border border-gray-200 p-6 sm:p-8">
+            <h2 className="text-3xl font-bold mb-8 text-center text-primary-700">
               ¿Por Qué Elegirnos?
             </h2>
             <div className="features-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="feature text-center p-6 bg-gray-50 rounded-lg">
                 <i className="fas fa-industry text-4xl text-primary-600 mb-4"></i>
-                <h4 className="text-xl font-semibold mb-2 text-gray-900">
+                <h4 className="text-xl font-semibold mb-2 text-primary-700">
                   Tecnología de Punta
                 </h4>
                 <p className="text-gray-700">Maquinaria y procesos de última generación</p>
               </div>
               <div className="feature text-center p-6 bg-gray-50 rounded-lg">
                 <i className="fas fa-medal text-4xl text-primary-600 mb-4"></i>
-                <h4 className="text-xl font-semibold mb-2 text-gray-900">
+                <h4 className="text-xl font-semibold mb-2 text-primary-700">
                   Calidad Garantizada
                 </h4>
                 <p className="text-gray-700">Productos certificados y controlados</p>
               </div>
               <div className="feature text-center p-6 bg-gray-50 rounded-lg">
                 <i className="fas fa-users text-4xl text-primary-600 mb-4"></i>
-                <h4 className="text-xl font-semibold mb-2 text-gray-900">
+                <h4 className="text-xl font-semibold mb-2 text-primary-700">
                   Equipo Profesional
                 </h4>
                 <p className="text-gray-700">Personal altamente capacitado</p>
               </div>
               <div className="feature text-center p-6 bg-gray-50 rounded-lg">
                 <i className="fas fa-truck text-4xl text-primary-600 mb-4"></i>
-                <h4 className="text-xl font-semibold mb-2 text-gray-900">
+                <h4 className="text-xl font-semibold mb-2 text-primary-700">
                   Entrega Oportuna
                 </h4>
                 <p className="text-gray-700">Cumplimiento en tiempos de entrega</p>

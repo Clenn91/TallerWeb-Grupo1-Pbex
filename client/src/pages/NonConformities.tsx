@@ -1,3 +1,4 @@
+import Dialog from '../components/Dialog';
 import { useState, FormEvent } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { nonConformityAPI, productAPI, qualityAPI } from "../services/api";
@@ -162,15 +163,14 @@ const NonConformities = () => {
 
       {/* Modal de creación */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Reportar No Conformidad</h2>
+        <Dialog title={"Reportar no conformidad"} onClose={() => { setShowCreateModal(false); setFormData({ productId: "", productionRecordId: "", description: "", severity: "media" }); if (location.state) window.history.replaceState({}, document.title); }} busy={createMutation.isLoading} wide
+          description="Describe el problema e indica su severidad. Los campos con * son obligatorios.">
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="nonconformities-field-1" className="block text-sm font-medium text-gray-700 mb-1">
                   Producto (Opcional)
                 </label>
-                <select
+                <select id="nonconformities-field-1"
                   className="input w-full"
                   value={formData.productId}
                   onChange={(e) => {
@@ -191,10 +191,10 @@ const NonConformities = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="nonconformities-field-2" className="block text-sm font-medium text-gray-700 mb-1">
                   Registro de Producción (Opcional)
                 </label>
-                <select
+                <select id="nonconformities-field-2"
                   className="input w-full"
                   value={formData.productionRecordId}
                   onChange={(e) =>
@@ -218,10 +218,10 @@ const NonConformities = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="nonconformities-field-3" className="block text-sm font-medium text-gray-700 mb-1">
                   Descripción *
                 </label>
-                <textarea
+                <textarea id="nonconformities-field-3"
                   className="input w-full"
                   rows={4}
                   value={formData.description}
@@ -234,10 +234,10 @@ const NonConformities = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="nonconformities-field-4" className="block text-sm font-medium text-gray-700 mb-1">
                   Severidad *
                 </label>
-                <select
+                <select id="nonconformities-field-4"
                   className="input w-full"
                   value={formData.severity}
                   onChange={(e) =>
@@ -283,8 +283,7 @@ const NonConformities = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

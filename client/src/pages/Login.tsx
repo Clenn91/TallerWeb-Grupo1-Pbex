@@ -1,6 +1,7 @@
 import { useState, useEffect, FormEvent, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import BrandLogo from '../components/BrandLogo';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -38,44 +39,44 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sistema de Gestión de Calidad
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Plásticos Básicos de Exportación S.A.C.
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+    <main className="min-h-screen border-t-4 border-primary-700 bg-primary-50 px-4 py-8 sm:py-14">
+      <div className="mx-auto max-w-md">
+        <Link to="/" className="mb-8 inline-block text-sm font-semibold text-primary-700 hover:underline">Volver al inicio</Link>
+        <div className="card !p-6 sm:!p-8">
+          <Link to="/" className="mb-8 inline-block"><BrandLogo /></Link>
+          <p className="section-label">Gestión de calidad</p>
+          <h1 className="text-3xl font-bold">Iniciar sesión</h1>
+          <p className="mt-3 text-gray-600">Ingresa con tu usuario y contraseña para acceder al sistema.</p>
+        <form className="mt-7 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-5">
             <div>
-              <label htmlFor="username" className="sr-only">
+              <label htmlFor="username" className="mb-2 block text-sm font-semibold text-gray-700">
                 Usuario
               </label>
               <input
                 id="username"
                 name="username"
                 type="text"
+                autoComplete="username"
                 required
-                className="input rounded-t-md"
-                placeholder="Usuario"
+                className="input"
+                placeholder="Tu usuario"
                 value={username}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
               />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
+              <label htmlFor="password" className="mb-2 block text-sm font-semibold text-gray-700">
                 Contraseña
               </label>
               <input
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
-                className="input rounded-b-md"
-                placeholder="Contraseña"
+                className="input"
+                placeholder="Tu contraseña"
                 value={password}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               />
@@ -88,36 +89,28 @@ const Login = () => {
               disabled={loading}
               className="btn btn-primary w-full"
             >
-              {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {loading ? 'Iniciando sesión...' : 'Ingresar al sistema'}
             </button>
           </div>
         </form>
 
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">o</span>
-            </div>
-          </div>
-
-          <div className="mt-6">
+        <div className="mt-6 border-t border-gray-200 pt-6">
+          <div>
             <button
               type="button"
               onClick={() => navigate('/public-products')}
               className="btn btn-secondary w-full"
             >
-              📦 Ver Catálogo de Productos
+              Ver catálogo de productos
             </button>
-            <p className="mt-2 text-center text-xs text-gray-500">
+            <p className="mt-3 text-center text-sm text-gray-500">
               Acceso sin necesidad de iniciar sesión
             </p>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

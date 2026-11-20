@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {
   PRODUCT_CATEGORIES,
-  PRODUCT_CATEGORY_LABEL_BY_VALUE,
   PRODUCT_CATEGORY_VALUE_BY_SLUG,
   PRODUCT_MATERIALS,
 } from '../utils/constants';
@@ -17,7 +16,8 @@ const PublicProducts = () => {
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
   // Obtener filtros de la URL
-  const selectedCategories = searchParams.get('categories')?.split(',').filter(Boolean) || [];
+  const linkedCategory = PRODUCT_CATEGORY_VALUE_BY_SLUG[searchParams.get('category') || ''];
+  const selectedCategories = searchParams.get('categories')?.split(',').filter(Boolean) || (linkedCategory ? [linkedCategory] : []);
   const selectedMaterials = searchParams.get('materials')?.split(',').filter(Boolean) || [];
 
   // Función para actualizar filtros en la URL
@@ -48,7 +48,7 @@ const PublicProducts = () => {
     updateFilters(selectedCategories, newMaterials);
   };
 
-  const { data, isLoading } = useQuery<{ data: Product[] }>(
+  const { data, isLoading, isError, refetch } = useQuery<{ data: Product[] }>(
     ['public-products', selectedCategories.join(','), selectedMaterials.join(',')],
     () => {
       const params: { active: boolean; category?: string[]; material?: string[] } = { active: true };
@@ -64,33 +64,19 @@ const PublicProducts = () => {
 
   const products = data?.data || [];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando productos...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full py-8 px-4 sm:px-6 lg:px-8">
-        <div className="space-y-6">
+      <main className="flex-1 max-w-7xl mx-auto w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Catálogo de Productos
-            </h2>
-            <p className="mt-1 text-sm text-gray-500">
-              {products.length} {products.length === 1 ? 'producto disponible' : 'productos disponibles'}
+            <p className="section-label">Envases y accesorios PBEX</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-primary-700">
+              Nuestros productos
+            </h1>
+            <p className="mt-3 text-gray-600">
+              Encuentra el envase que necesitas. Filtra por categoría o material.
             </p>
           </div>
 
@@ -101,21 +87,24 @@ const PublicProducts = () => {
               {/* Botón para mostrar/ocultar filtros en móvil */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
+                aria-expanded={showFilters}
+                aria-controls="catalog-filters"
                 className="lg:hidden w-full btn btn-secondary mb-4 flex items-center justify-between"
               >
                 <span>Filtros</span>
-                <span>{showFilters ? '▲' : '▼'}</span>
+                <span>{showFilters ? 'Ocultar' : 'Mostrar'}</span>
               </button>
 
               {/* Panel de filtros */}
               <div
+                id="catalog-filters"
                 className={`${
                   showFilters ? 'block' : 'hidden'
-                } lg:block bg-white rounded-lg shadow p-4 space-y-6`}
+                } lg:block filter-panel space-y-6`}
               >
                 {/* Filtros de Categorías */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b-2 border-red-500">
+                  <h2 className="filter-title">
                     CATEGORÍAS
                   </h2>
                   <div className="space-y-2">
@@ -124,7 +113,7 @@ const PublicProducts = () => {
                       return (
                         <label
                           key={category.value}
-                          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                          className="filter-option"
                         >
                           <input
                             type="checkbox"
@@ -132,8 +121,8 @@ const PublicProducts = () => {
                             onChange={() => handleCategoryToggle(category.value)}
                             className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                           />
-                          <span className="text-sm text-gray-700">
-                            {category.value}
+                          <span className="text-sm capitalize">
+                            {category.value.toLowerCase()}
                           </span>
                         </label>
                       );
@@ -143,7 +132,7 @@ const PublicProducts = () => {
 
                 {/* Filtros de Materiales */}
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b-2 border-red-500">
+                  <h2 className="filter-title">
                     MATERIAL
                   </h2>
                   <div className="space-y-2">
@@ -152,7 +141,7 @@ const PublicProducts = () => {
                       return (
                         <label
                           key={material}
-                          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                          className="filter-option"
                         >
                           <input
                             type="checkbox"
@@ -160,17 +149,20 @@ const PublicProducts = () => {
                             onChange={() => handleMaterialToggle(material)}
                             className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                           />
-                          <span className="text-sm text-gray-700">{material}</span>
+                          <span className="text-sm capitalize">{['PET', 'PVC'].includes(material) ? material : material.toLowerCase()}</span>
                         </label>
                       );
                     })}
                   </div>
                 </div>
+                {(selectedCategories.length > 0 || selectedMaterials.length > 0) && <button type="button" onClick={() => updateFilters([], [])} className="btn btn-secondary w-full">Limpiar filtros</button>}
               </div>
             </aside>
 
             {/* Contenido principal */}
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
+              {isLoading ? <p role="status" className="py-16 text-center text-gray-600">Cargando productos...</p> : isError ? <div role="alert" className="card py-12 text-center"><h2 className="text-xl font-bold">No pudimos cargar el catálogo</h2><p className="mt-2 mb-6 text-gray-600">Intenta de nuevo en unos momentos.</p><button type="button" onClick={() => refetch()} className="btn btn-primary">Reintentar</button></div> : <>
+              <p className="mb-5 text-sm text-gray-500">{products.length} {products.length === 1 ? 'producto disponible' : 'productos disponibles'}</p>
               {products.length === 0 ? (
                 <div className="text-center py-12">
                   <i className="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
@@ -182,13 +174,13 @@ const PublicProducts = () => {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {products.map((product) => (
-                <div key={product.id} className="card hover:shadow-lg transition-shadow">
+                <div key={product.id} className="catalog-card transition-colors">
                   {product.imageUrl && (
                     <div className="mb-4">
                       <img
                         src={product.imageUrl}
                         alt={product.name}
-                        className="w-full h-48 object-cover rounded-lg bg-white"
+                        className="w-full h-48 object-contain bg-white"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           // Si la URL relativa falla, intentar con URL completa
@@ -205,13 +197,13 @@ const PublicProducts = () => {
                     </div>
                   )}
                   {!product.imageUrl && (
-                    <div className="mb-4 w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <div className="mb-4 w-full h-48 bg-gray-50 rounded flex items-center justify-center" aria-label="Producto sin imagen">
                       <i className="fas fa-box text-4xl text-gray-400"></i>
                     </div>
                   )}
-                  <h3 className="font-semibold text-lg mb-2 text-gray-900">{product.name}</h3>
+                  <h2 className="font-semibold text-base leading-snug mb-3 text-primary-700">{product.name}</h2>
                   {product.code && (
-                    <p className="text-xs text-gray-500 mb-1">
+                    <p className="text-sm text-gray-500 mb-1">
                       <span className="font-medium">Código:</span> {product.code}
                     </p>
                   )}
@@ -220,19 +212,19 @@ const PublicProducts = () => {
                       {product.description}
                     </p>
                   )}
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-gray-500">
                     <span className="font-medium">Categoría:</span>{' '}
                     {product.category || 'Sin categoría'}
                   </p>
                   {product.material && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm text-gray-500">
                       <span className="font-medium">Material:</span> {product.material}
                     </p>
                   )}
                 </div>
               ))}
                 </div>
-              )}
+              )}</>}
             </div>
           </div>
         </div>

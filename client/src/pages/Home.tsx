@@ -18,7 +18,7 @@ const Home = () => {
       title: 'EXPERIENCIA, TECNOLOGÍA Y CALIDAD',
       subtitle: 'Empresa certificada',
       link: '/nosotros',
-      buttonText: 'Ver CERTIFICADOS',
+      buttonText: 'Conoce nuestra calidad',
     },
   ];
 
@@ -55,32 +55,36 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="hero relative bg-gradient-to-r from-primary-600 to-primary-800 text-white overflow-hidden">
-        <div className="relative h-[500px] md:h-[600px]">
+      <section className="hero relative bg-primary-700 text-white overflow-hidden" aria-label="Presentación de PBEX">
+        <div className="relative h-[640px] sm:h-[620px] md:h-[540px]">
           {slides.map((slide, index) => (
             <div
               key={index}
+              aria-hidden={currentSlide !== index}
               className={`absolute inset-0 transition-opacity duration-1000 ${
                 currentSlide === index ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
               }`}
             >
-              <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
-                <div className="hero-content max-w-3xl">
-                  <h1 className="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+              <div className="container max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 h-full grid items-center gap-4 pb-20 pt-9 md:grid-cols-[1.4fr_1fr] md:gap-12 md:pb-16 md:pt-12">
+                <div className="hero-content max-w-2xl">
+                  <p className="mb-4 text-sm font-semibold tracking-wider text-accent-100">PLÁSTICOS BÁSICOS DE EXPORTACIÓN</p>
+                  <h1 className="hero-title text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                     {slide.title}
                   </h1>
-                  <p className="hero-subtitle text-xl md:text-2xl mb-8 text-primary-100">
+                  <p className="hero-subtitle text-lg md:text-xl mb-6 text-accent-100">
                     {slide.subtitle}
                   </p>
                   <Link
                     to={slide.link}
-                    className={`btn btn-primary bg-white text-primary-600 hover:bg-primary-50 inline-flex items-center gap-2 text-lg px-8 py-3 ${
+                    tabIndex={currentSlide === index ? 0 : -1}
+                    className={`btn btn-accent px-7 ${
                       currentSlide === index ? '' : 'pointer-events-none'
                     }`}
                   >
-                    {slide.buttonText} <i className="fas fa-arrow-right"></i>
+                    {slide.buttonText}
                   </Link>
                 </div>
+                <img src="/products/botellon.png" alt="Botellón PBEX con caño" width="1000" height="1000" className="mx-auto h-44 w-full object-contain sm:h-56 md:h-96" />
               </div>
             </div>
           ))}
@@ -89,7 +93,7 @@ const Home = () => {
           {slides.length > 1 && (
             <>
               <button
-                className="slider-control prev absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-20 cursor-pointer pointer-events-auto"
+                className="slider-control prev absolute bottom-4 left-6 flex h-11 w-11 items-center justify-center rounded-md border border-white/30 text-white hover:bg-white/10 transition-colors z-20"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -101,7 +105,7 @@ const Home = () => {
                 <i className="fas fa-chevron-left"></i>
               </button>
               <button
-                className="slider-control next absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition-colors z-20 cursor-pointer pointer-events-auto"
+                className="slider-control next absolute bottom-4 right-6 flex h-11 w-11 items-center justify-center rounded-md border border-white/30 text-white hover:bg-white/10 transition-colors z-20"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -118,15 +122,16 @@ const Home = () => {
                 {slides.map((_, index) => (
                   <button
                     key={index}
-                    className={`indicator w-3 h-3 rounded-full transition-all ${
+                    className={`indicator h-11 w-11 flex items-center justify-center transition-colors ${
                       currentSlide === index
-                        ? 'bg-white w-8'
-                        : 'bg-white/50 hover:bg-white/75'
+                        ? 'text-white'
+                        : 'text-white/40 hover:text-white/75'
                     }`}
                     onClick={() => goToSlide(index)}
                     type="button"
                     aria-label={`Ir al slide ${index + 1}`}
-                  ></button>
+                    aria-pressed={currentSlide === index}
+                  ><span className="h-1 w-7 rounded-full bg-current" /></button>
                 ))}
               </div>
             </>
@@ -135,25 +140,23 @@ const Home = () => {
       </section>
 
       {/* Products Grid */}
-      <section className="products-section py-16 bg-gray-50">
+      <section className="products-section py-12 sm:py-16 bg-white">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="section-title text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900">
+          <h2 className="section-title text-3xl md:text-4xl font-bold mb-8 text-primary-700">
             Nuestros Productos
           </h2>
 
-          <div className="products-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="products-grid grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
             {PRODUCT_CATEGORIES.map((category) => (
               <Link
                 key={category.slug}
                 to={`/public-products?category=${category.slug}`}
-                className="product-card bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow group"
+                className="product-card rounded-lg border border-gray-200 bg-white p-3 text-center hover:border-primary-300 transition-colors group"
               >
                 <div className="product-image mb-4">
-                  <div className="w-20 h-20 mx-auto bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-200 transition-colors">
-                    <i className="fas fa-box text-3xl text-primary-600"></i>
-                  </div>
+                  <img src={`/products/${category.slug === 'botellones' ? 'botellon' : category.slug}.png`} alt="" width="1000" height="1000" loading="lazy" className="mx-auto h-28 w-full object-contain" />
                 </div>
-                <h3 className="product-name font-semibold text-gray-800 group-hover:text-primary-600 transition-colors">
+                <h3 className="product-name text-sm font-semibold text-primary-700 group-hover:text-accent-700 transition-colors">
                   {formatCategoryName(category.value)}
                 </h3>
               </Link>
@@ -163,28 +166,31 @@ const Home = () => {
       </section>
 
       {/* About Section */}
-      <section className="about-section py-16 bg-white">
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="section-title text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">
+      <section className="about-section py-12 sm:py-16 bg-primary-50">
+        <div className="container max-w-7xl mx-auto grid items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
+          <div>
+          <h2 className="section-title text-3xl md:text-4xl font-bold mb-5 text-primary-700">
             TRAYECTORIA, REPUTACIÓN Y CONFIABILIDAD
           </h2>
-          <p className="section-subtitle text-xl text-center text-gray-600 mb-8">
+          <p className="section-subtitle text-lg text-gray-700 mb-5">
             Somos la empresa líder en soluciones de envases plásticos en Perú
           </p>
 
-          <div className="about-content max-w-3xl mx-auto text-center">
-            <p className="text-lg text-gray-700 mb-8">
+          <div className="about-content">
+            <p className="text-base leading-relaxed text-gray-600 mb-6">
               Somos líderes en la industria del plástico, con valores arraigados,
               tecnología punta y una larga experiencia. Fabricamos productos de alta
               calidad que impulsan el éxito de nuestros clientes.
             </p>
             <Link
               to="/nosotros"
-              className="btn btn-secondary inline-flex items-center gap-2 text-lg px-8 py-3"
+              className="btn btn-primary"
             >
-              Conoce más <i className="fas fa-arrow-right"></i>
+              Conoce más
             </Link>
           </div>
+          </div>
+          <img src="/brand/production.jpg" alt="Asas plásticas azules fabricadas por PBEX" width="850" height="567" loading="lazy" className="w-full rounded-lg object-cover" />
         </div>
       </section>
 

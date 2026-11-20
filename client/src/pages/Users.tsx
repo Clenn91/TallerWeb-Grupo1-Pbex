@@ -1,3 +1,4 @@
+import Dialog from '../components/Dialog';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { userAPI } from '../services/api';
@@ -17,6 +18,7 @@ interface UserFormData {
 const Users = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [userToDeactivate, setUserToDeactivate] = useState<User | null>(null);
   const [formData, setFormData] = useState<UserFormData>({
     username: '',
     email: '',
@@ -69,6 +71,7 @@ const Users = () => {
       onSuccess: () => {
         toast.success('Usuario desactivado correctamente');
         queryClient.invalidateQueries('users');
+        setUserToDeactivate(null);
       },
       onError: (error: any) => {
         toast.error(error.response?.data?.message || 'Error al desactivar usuario');
@@ -133,9 +136,7 @@ const Users = () => {
   };
 
   const handleDelete = (user: User): void => {
-    if (window.confirm(`¿Estás seguro de desactivar al usuario ${user.fullName}?`)) {
-      deleteUserMutation.mutate(user.id);
-    }
+    setUserToDeactivate(user);
   };
 
   const getRoleLabel = (role: string): string => {
@@ -228,19 +229,29 @@ const Users = () => {
         </div>
       </div>
 
+      {userToDeactivate && (
+        <Dialog title="Desactivar usuario" onClose={() => setUserToDeactivate(null)} busy={deleteUserMutation.isLoading}
+          description="El usuario quedará inactivo y no podrá ingresar al sistema.">
+          <p className="text-base text-gray-700">¿Deseas desactivar a <strong>{userToDeactivate.fullName}</strong>?</p>
+          <div className="form-actions">
+            <button type="button" onClick={() => setUserToDeactivate(null)} className="btn btn-secondary" disabled={deleteUserMutation.isLoading}>Cancelar</button>
+            <button type="button" onClick={() => deleteUserMutation.mutate(userToDeactivate.id)} className="btn btn-danger" disabled={deleteUserMutation.isLoading}>
+              {deleteUserMutation.isLoading ? 'Desactivando...' : 'Desactivar usuario'}
+            </button>
+          </div>
+        </Dialog>
+      )}
+
       {/* Modal para crear/editar usuario */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">
-              {editingUser ? 'Editar Usuario' : 'Crear Nuevo Usuario'}
-            </h2>
+        <Dialog title={editingUser ? "Editar usuario" : "Crear usuario"} onClose={handleCloseModal} busy={createUserMutation.isLoading || updateUserMutation.isLoading}
+          description="Completa los datos de acceso y el rol. Los campos con * son obligatorios.">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="users-field-1" className="block text-sm font-medium text-gray-700 mb-1">
                   Usuario *
                 </label>
-                <input
+                <input id="users-field-1"
                   type="text"
                   className="input"
                   value={formData.username}
@@ -251,10 +262,10 @@ const Users = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="users-field-2" className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre Completo *
                 </label>
-                <input
+                <input id="users-field-2"
                   type="text"
                   className="input"
                   value={formData.fullName}
@@ -264,10 +275,10 @@ const Users = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="users-field-3" className="block text-sm font-medium text-gray-700 mb-1">
                   Email *
                 </label>
-                <input
+                <input id="users-field-3"
                   type="email"
                   className="input"
                   value={formData.email}
@@ -277,10 +288,10 @@ const Users = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="users-field-4" className="block text-sm font-medium text-gray-700 mb-1">
                   Contraseña {editingUser ? '(dejar vacío para no cambiar)' : '*'}
                 </label>
-                <input
+                <input id="users-field-4"
                   type="password"
                   className="input"
                   value={formData.password}
@@ -291,10 +302,10 @@ const Users = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="users-field-5" className="block text-sm font-medium text-gray-700 mb-1">
                   Rol *
                 </label>
-                <select
+                <select id="users-field-5"
                   className="input"
                   value={formData.role}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, role: e.target.value })}
@@ -341,8 +352,7 @@ const Users = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

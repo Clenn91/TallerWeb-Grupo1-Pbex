@@ -1,3 +1,4 @@
+import Dialog from '../components/Dialog';
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { qualityAPI, productAPI } from '../services/api';
@@ -201,37 +202,20 @@ const QualityRegister = () => {
       </div>
 
       <div className="card">
-        <div className="mb-4">
-          <div className="flex items-center">
-            <div
-              className={`flex items-center justify-center w-8 h-8 rounded-full ${
-                step >= 1 ? 'bg-primary-600 text-white' : 'bg-gray-300'
-              }`}
-            >
-              1
-            </div>
-            <div className="ml-2 text-sm font-medium">Registro de Producción</div>
-          </div>
-          {step === 2 && (
-            <div className="mt-2 ml-10">
-              <div className="flex items-center">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-600 text-white">
-                  2
-                </div>
-                <div className="ml-2 text-sm font-medium">Control de Calidad</div>
-              </div>
-            </div>
-          )}
-        </div>
+        <ol aria-label="Pasos del registro" className="mb-6 grid grid-cols-2 gap-4 border-b border-gray-200 pb-5 text-sm">
+          <li aria-current={step === 1 ? 'step' : undefined} className={step === 1 ? 'font-bold text-primary-700' : 'text-gray-500'}>1. Registro de producción</li>
+          <li aria-current={step === 2 ? 'step' : undefined} className={step === 2 ? 'font-bold text-primary-700' : 'text-gray-500'}>2. Control de calidad</li>
+        </ol>
+        <p className="mb-6 text-sm text-gray-600">{step === 1 ? 'Selecciona el producto y registra el lote y las cantidades para continuar.' : 'Revisa la producción, añade las mediciones y registra los defectos si corresponde.'} Los campos con * son obligatorios.</p>
 
         {step === 1 ? (
           <form onSubmit={handleProductionSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-1" className="block text-sm font-medium text-gray-700 mb-1">
                   Producto *
                 </label>
-                <select
+                <select id="qualityregister-field-1"
                   className="input"
                   value={formData.productId}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, productId: e.target.value })}
@@ -247,10 +231,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-2" className="block text-sm font-medium text-gray-700 mb-1">
                   Número de Lote *
                 </label>
-                <input
+                <input id="qualityregister-field-2"
                   type="text"
                   className="input"
                   value={formData.lotNumber}
@@ -260,10 +244,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-3" className="block text-sm font-medium text-gray-700 mb-1">
                   Fecha de Producción *
                 </label>
-                <input
+                <input id="qualityregister-field-3"
                   type="date"
                   className="input"
                   value={formData.productionDate}
@@ -273,10 +257,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-4" className="block text-sm font-medium text-gray-700 mb-1">
                   Turno *
                 </label>
-                <select
+                <select id="qualityregister-field-4"
                   className="input"
                   value={formData.shift}
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormData({ ...formData, shift: e.target.value })}
@@ -289,10 +273,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-5" className="block text-sm font-medium text-gray-700 mb-1">
                   Línea de Producción
                 </label>
-                <input
+                <input id="qualityregister-field-5"
                   type="text"
                   className="input"
                   value={formData.productionLine}
@@ -301,10 +285,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-6" className="block text-sm font-medium text-gray-700 mb-1">
                   Total Producido *
                 </label>
-                <input
+                <input id="qualityregister-field-6"
                   type="number"
                   className="input"
                   value={formData.totalProduced}
@@ -315,10 +299,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-7" className="block text-sm font-medium text-gray-700 mb-1">
                   Total Aprobado *
                 </label>
-                <input
+                <input id="qualityregister-field-7"
                   type="number"
                   className="input"
                   value={formData.totalApproved}
@@ -329,10 +313,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-8" className="block text-sm font-medium text-gray-700 mb-1">
                   Total Rechazado *
                 </label>
-                <input
+                <input id="qualityregister-field-8"
                   type="number"
                   className="input"
                   value={formData.totalRejected}
@@ -343,9 +327,9 @@ const QualityRegister = () => {
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <button type="submit" className="btn btn-primary">
-                Continuar a Control de Calidad
+            <div className="form-actions">
+              <button type="submit" className="btn btn-primary" disabled={createProductionRecordMutation.isLoading}>
+                {createProductionRecordMutation.isLoading ? 'Guardando producción...' : 'Continuar a control de calidad'}
               </button>
             </div>
           </form>
@@ -353,7 +337,7 @@ const QualityRegister = () => {
           <>
             {/* Resumen del registro de producción */}
             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-              <div className="flex justify-between items-start mb-2">
+              <div className="flex flex-wrap justify-between items-start gap-3 mb-4">
                 <h3 className="font-semibold text-lg">Resumen del Registro de Producción</h3>
                 <button
                   type="button"
@@ -402,10 +386,10 @@ const QualityRegister = () => {
             <form onSubmit={handleQualitySubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-9" className="block text-sm font-medium text-gray-700 mb-1">
                   Peso (g)
                 </label>
-                <input
+                <input id="qualityregister-field-9"
                   type="number"
                   step="0.001"
                   className="input"
@@ -415,10 +399,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-10" className="block text-sm font-medium text-gray-700 mb-1">
                   Diámetro (mm)
                 </label>
-                <input
+                <input id="qualityregister-field-10"
                   type="number"
                   step="0.01"
                   className="input"
@@ -428,10 +412,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-11" className="block text-sm font-medium text-gray-700 mb-1">
                   Altura (mm)
                 </label>
-                <input
+                <input id="qualityregister-field-11"
                   type="number"
                   step="0.01"
                   className="input"
@@ -441,10 +425,10 @@ const QualityRegister = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="qualityregister-field-12" className="block text-sm font-medium text-gray-700 mb-1">
                   Ancho (mm)
                 </label>
-                <input
+                <input id="qualityregister-field-12"
                   type="number"
                   step="0.01"
                   className="input"
@@ -456,7 +440,7 @@ const QualityRegister = () => {
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label htmlFor="qualityregister-field-13" className="block text-sm font-medium text-gray-700">
                   Defectos
                 </label>
                 <button
@@ -469,8 +453,12 @@ const QualityRegister = () => {
               </div>
 
               {formData.defects.map((defect, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
+                <fieldset key={index} className="mb-4 grid grid-cols-1 gap-4 rounded-md border border-gray-200 p-4 md:grid-cols-3">
+                  <legend className="px-1 text-sm font-semibold text-primary-700">Defecto {index + 1}</legend>
+                  <div>
+                  <label htmlFor={`defect-type-${index}`} className="mb-1 block text-sm font-medium text-gray-700">Tipo de defecto</label>
                   <select
+                    id={`defect-type-${index}`}
                     className="input"
                     value={defect.defectType}
                     onChange={(e: ChangeEvent<HTMLSelectElement>) => updateDefect(index, 'defectType', e.target.value)}
@@ -482,7 +470,11 @@ const QualityRegister = () => {
                       </option>
                     ))}
                   </select>
+                  </div>
+                  <div>
+                  <label htmlFor={`defect-quantity-${index}`} className="mb-1 block text-sm font-medium text-gray-700">Cantidad</label>
                   <input
+                    id={`defect-quantity-${index}`}
                     type="number"
                     className="input"
                     placeholder="Cantidad"
@@ -490,18 +482,23 @@ const QualityRegister = () => {
                     onChange={(e: ChangeEvent<HTMLInputElement>) => updateDefect(index, 'quantity', parseInt(e.target.value) || 0)}
                     min="0"
                   />
+                  </div>
+                  <div>
+                  <label htmlFor={`defect-description-${index}`} className="mb-1 block text-sm font-medium text-gray-700">Descripción</label>
                   <input
+                    id={`defect-description-${index}`}
                     type="text"
                     className="input"
                     placeholder="Descripción"
                     value={defect.description}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => updateDefect(index, 'description', e.target.value)}
                   />
-                </div>
+                  </div>
+                </fieldset>
               ))}
             </div>
 
-            <div className="flex justify-between">
+            <div className="form-actions !justify-between">
               <button
                 type="button"
                 onClick={() => setStep(1)}
@@ -517,10 +514,9 @@ const QualityRegister = () => {
 
           {/* Modal de resumen */}
           {showSummary && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                <h2 className="text-2xl font-bold mb-4">Resumen del Control de Calidad</h2>
-                <div className="space-y-4">
+            <Dialog title={"Revisar control de calidad"} onClose={() => setShowSummary(false)} busy={createQualityControlMutation.isLoading} wide
+          description="Comprueba las mediciones y los defectos. Puedes volver a editar antes de registrar.">
+            <div className="space-y-4">
                   <div>
                     <h3 className="font-semibold mb-2">Mediciones</h3>
                     <div className="grid grid-cols-2 gap-2 text-sm">
@@ -564,16 +560,14 @@ const QualityRegister = () => {
                     {createQualityControlMutation.isLoading ? 'Registrando...' : 'Confirmar y Registrar'}
                   </button>
                 </div>
-              </div>
-            </div>
+        </Dialog>
           )}
 
           {/* Modal de edición de producción */}
           {showEditProduction && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                <h2 className="text-2xl font-bold mb-4">Editar Registro de Producción</h2>
-                <form
+            <Dialog title={"Editar registro de producción"} onClose={() => setShowEditProduction(false)} wide
+          description="Revisa las cantidades y guarda los cambios para continuar.">
+            <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     setShowEditProduction(false);
@@ -585,7 +579,7 @@ const QualityRegister = () => {
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Total Producido *
                       </label>
-                      <input
+                      <input id="qualityregister-field-13"
                         type="number"
                         className="input"
                         value={formData.totalProduced}
@@ -595,10 +589,10 @@ const QualityRegister = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="qualityregister-field-14" className="block text-sm font-medium text-gray-700 mb-1">
                         Total Aprobado *
                       </label>
-                      <input
+                      <input id="qualityregister-field-14"
                         type="number"
                         className="input"
                         value={formData.totalApproved}
@@ -608,10 +602,10 @@ const QualityRegister = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="qualityregister-field-15" className="block text-sm font-medium text-gray-700 mb-1">
                         Total Rechazado *
                       </label>
-                      <input
+                      <input id="qualityregister-field-15"
                         type="number"
                         className="input"
                         value={formData.totalRejected}
@@ -634,8 +628,7 @@ const QualityRegister = () => {
                     </button>
                   </div>
                 </form>
-              </div>
-            </div>
+        </Dialog>
           )}
         </>
         )}

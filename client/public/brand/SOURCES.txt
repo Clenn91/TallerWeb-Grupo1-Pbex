@@ -1,0 +1,6 @@
+PBEX brand assets, copied from the official company website:
+https://pbex.com.pe/wp-content/uploads/2024/02/logo-a-color-pbex-400x154.png
+https://pbex.com.pe/wp-content/uploads/2024/02/logo-a-blanco-pbex.png
+https://pbex.com.pe/wp-content/uploads/2024/11/dos1.jpg
+
+Product photos in ../products are existing PBEX assets copied from server/scripts/images/products.

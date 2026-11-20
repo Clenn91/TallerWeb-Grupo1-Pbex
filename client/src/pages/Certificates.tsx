@@ -1,4 +1,5 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import Dialog from '../components/Dialog';
+import { useState, FormEvent } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { certificateAPI, qualityAPI, productAPI } from '../services/api';
 import api from '../services/api';
@@ -267,7 +268,7 @@ const Certificates = () => {
                         className="btn btn-secondary text-xs"
                         title="Descargar PDF"
                       >
-                        📥 Descargar PDF
+                        Descargar PDF
                       </button>
                     )}
                     {certificate.status === 'aprobado' && !certificate.pdfPath && (
@@ -283,9 +284,8 @@ const Certificates = () => {
 
       {/* Modal de rechazo */}
       {showRejectModal && selectedCertificate && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">Rechazar Certificado</h2>
+        <Dialog title={"Rechazar certificado"} onClose={() => { setShowRejectModal(false); setSelectedCertificate(null); setRejectionReason(''); }} busy={rejectMutation.isLoading}
+          description="Revisa el certificado e indica el motivo antes de confirmar el rechazo.">
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">
                 <span className="font-medium">Código:</span> {selectedCertificate.code}
@@ -299,10 +299,10 @@ const Certificates = () => {
             </div>
             <form onSubmit={handleRejectSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="certificates-field-1" className="block text-sm font-medium text-gray-700 mb-1">
                   Motivo del Rechazo *
                 </label>
-                <textarea
+                <textarea id="certificates-field-1"
                   className="input w-full"
                   rows={4}
                   value={rejectionReason}
@@ -333,21 +333,19 @@ const Certificates = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Dialog>
       )}
 
       {/* Modal de creación */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Crear Nuevo Certificado</h2>
+        <Dialog title={"Crear certificado"} onClose={() => { setShowCreateModal(false); setFormData({ productId: '', productionRecordId: '', qualityControlId: '' }); }} busy={createMutation.isLoading} wide
+          description="Selecciona primero el producto y luego el registro de producción. Los campos con * son obligatorios.">
             <form onSubmit={handleCreateSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="certificates-field-2" className="block text-sm font-medium text-gray-700 mb-1">
                   Producto *
                 </label>
-                <select
+                <select id="certificates-field-2"
                   className="input w-full"
                   value={formData.productId}
                   onChange={(e) => {
@@ -369,10 +367,10 @@ const Certificates = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="certificates-field-3" className="block text-sm font-medium text-gray-700 mb-1">
                   Registro de Producción *
                 </label>
-                <select
+                <select id="certificates-field-3"
                   className="input w-full"
                   value={formData.productionRecordId}
                   onChange={(e) => {
@@ -405,10 +403,10 @@ const Certificates = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="certificates-field-4" className="block text-sm font-medium text-gray-700 mb-1">
                   Control de Calidad (Opcional)
                 </label>
-                <select
+                <select id="certificates-field-4"
                   className="input w-full"
                   value={formData.qualityControlId}
                   onChange={(e) =>
@@ -450,8 +448,7 @@ const Certificates = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

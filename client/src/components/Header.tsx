@@ -1,263 +1,56 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { PRODUCT_CATEGORIES } from "../utils/constants";
+import { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { PRODUCT_CATEGORIES } from '../utils/constants';
+import BrandLogo from './BrandLogo';
 
 const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { pathname, search } = useLocation();
   const { isAuthenticated } = useAuth();
 
-  const company = {
-    schedule: "Lunes - Viernes 8:00am - 5:00pm | Sábado 8:00am - 12:00pm",
-    email: "ventas@pbex.com.pe",
-    phone1: "(01) 357-6464",
-  };
-
-  const toggleMobileMenu = (): void => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const closeMobileMenu = (): void => {
-    setMobileMenuOpen(false);
-    setDropdownOpen(false);
-  };
-
-  const toggleDropdown = (): void => {
-    if (window.innerWidth <= 992) {
-      setDropdownOpen(!dropdownOpen);
-    }
-  };
-
+  useEffect(() => { setMobileMenuOpen(false); setDropdownOpen(false); }, [pathname, search]);
   useEffect(() => {
-    const handleResize = (): void => {
-      if (window.innerWidth > 992) {
-        setMobileMenuOpen(false);
-        setDropdownOpen(false);
-      }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { setMobileMenuOpen(false); setDropdownOpen(false); }
     };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, []);
 
   return (
-    <header className="header bg-white shadow-md sticky top-0 z-50">
-      {/* Top Bar */}
-      <div className="top-bar bg-primary-600 text-white py-2">
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center text-sm">
-            <div className="top-bar-left">
-              <span className="flex items-center gap-2">
-                <i className="far fa-clock"></i>
-                {company.schedule}
-              </span>
-            </div>
-            <div className="top-bar-right">
-              <a
-                href={`mailto:${company.email}`}
-                className="flex items-center gap-2 hover:underline"
-              >
-                <i className="far fa-envelope"></i>
-                {company.email}
-              </a>
-            </div>
-          </div>
+    <header className="sticky top-0 z-40 border-b border-gray-200 bg-white">
+      <div className="border-b border-gray-200 bg-gray-100 text-gray-600">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-4 px-4 py-2 text-sm sm:justify-between sm:px-6 lg:px-8">
+          <span className="hidden sm:block">Lunes – Viernes 8:00am – 5:00pm <span className="mx-2 text-gray-300">|</span> Sábado 8:00am – 12:00pm</span>
+          <a href="mailto:ventas@pbex.com.pe" className="shrink-0 hover:underline">ventas@pbex.com.pe</a>
         </div>
       </div>
-
-      {/* Main Header */}
-      <div className="main-header">
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="logo flex-shrink-0">
-              <Link to="/" className="flex items-center">
-                <div className="text-2xl font-bold text-primary-600">PBEX</div>
-              </Link>
-            </div>
-
-            {/* Navigation */}
-            <nav className="main-nav flex-1 hidden lg:flex justify-center">
-              <ul className="flex items-center space-x-8">
-                <li>
-                  <Link
-                    to="/"
-                    className={`nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      location.pathname === "/"
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    Inicio
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/nosotros"
-                    className={`nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      location.pathname === "/nosotros"
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    Nosotros
-                  </Link>
-                </li>
-                <li className="relative group">
-                  <button
-                    onClick={toggleDropdown}
-                    className="nav-link px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1 text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                  >
-                    Productos
-                    <i className="fas fa-chevron-down text-xs"></i>
-                  </button>
-                  <ul className="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                    <li>
-                      <Link
-                        to="/public-products"
-                        className="block px-4 py-2 text-sm font-semibold text-primary-600 hover:bg-primary-50 border-b border-gray-200"
-                      >
-                        Ver Todos los Productos
-                      </Link>
-                    </li>
-                    {PRODUCT_CATEGORIES.map((category) => (
-                      <li key={category.value}>
-                        <Link
-                          to={`/public-products?category=${category.slug}`}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {category.value}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              </ul>
-            </nav>
-
-            {/* Contact Info & Login */}
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-2 text-sm">
-                <i className="fas fa-phone-alt text-primary-600"></i>
-                <div className="flex flex-col">
-                  <span className="text-xs text-gray-500">CONTÁCTANOS</span>
-                  <a
-                    href="tel:013576464"
-                    className="text-primary-600 font-semibold hover:underline"
-                  >
-                    {company.phone1}
-                  </a>
-                </div>
-              </div>
-
-              {!isAuthenticated && (
-                <Link to="/login" className="btn btn-primary text-sm px-4 py-2">
-                  Iniciar Sesión
-                </Link>
-              )}
-
-              {/* Mobile Menu Toggle */}
-              <button
-                className="lg:hidden mobile-menu-toggle p-2 rounded-md text-gray-700 hover:bg-gray-100"
-                onClick={toggleMobileMenu}
-              >
-                <div className="w-6 h-6 flex flex-col justify-center gap-1.5">
-                  <span
-                    className={`block h-0.5 w-full bg-current transition-all ${
-                      mobileMenuOpen ? "rotate-45 translate-y-2" : ""
-                    }`}
-                  ></span>
-                  <span
-                    className={`block h-0.5 w-full bg-current transition-all ${
-                      mobileMenuOpen ? "opacity-0" : ""
-                    }`}
-                  ></span>
-                  <span
-                    className={`block h-0.5 w-full bg-current transition-all ${
-                      mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
-                    }`}
-                  ></span>
-                </div>
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-5 px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="shrink-0 py-4"><BrandLogo /></Link>
+        <nav id="main-navigation" aria-label="Navegación principal" className={`${mobileMenuOpen ? 'flex' : 'hidden'} order-last max-h-[calc(100dvh-9rem)] w-full flex-col gap-2 overflow-y-auto border-t border-gray-200 pb-4 lg:order-none lg:flex lg:max-h-none lg:w-auto lg:flex-row lg:items-center lg:gap-5 lg:overflow-visible lg:border-0 lg:pb-0`}>
+          <Link to="/" className="public-nav-link" aria-current={pathname === '/' ? 'page' : undefined}>Inicio</Link>
+          <Link to="/nosotros" className="public-nav-link" aria-current={pathname === '/nosotros' ? 'page' : undefined}>Nosotros</Link>
+          <div className="relative">
+            <div className="flex items-center gap-1">
+              <Link to="/public-products" className="public-nav-link" aria-current={pathname === '/public-products' ? 'page' : undefined}>Productos</Link>
+              <button type="button" onClick={() => setDropdownOpen(!dropdownOpen)} aria-expanded={dropdownOpen} aria-controls="category-navigation" aria-label="Mostrar categorías de productos" className="flex h-11 w-9 items-center justify-center rounded text-primary-700 hover:bg-primary-50">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d={dropdownOpen ? 'm4 10 4-4 4 4' : 'm4 6 4 4 4-4'} /></svg>
               </button>
             </div>
+            {dropdownOpen && <ul id="category-navigation" className="rounded-md border border-gray-200 bg-white p-2 lg:absolute lg:left-0 lg:top-full lg:w-56 lg:shadow-lg">
+              {PRODUCT_CATEGORIES.map(category => <li key={category.slug}><Link to={`/public-products?category=${category.slug}`} className="block rounded px-3 py-2.5 text-sm capitalize text-primary-700 hover:bg-primary-50">{category.value.toLowerCase()}</Link></li>)}
+            </ul>}
           </div>
-
-          {/* Mobile Menu */}
-          <div
-            className={`lg:hidden mobile-menu transition-all duration-300 overflow-hidden ${
-              mobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-            }`}
-          >
-            <ul className="py-4 space-y-2">
-              <li>
-                <Link
-                  to="/"
-                  onClick={closeMobileMenu}
-                  className={`block px-4 py-2 rounded-md ${
-                    location.pathname === "/"
-                      ? "text-primary-600 bg-primary-50"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/nosotros"
-                  onClick={closeMobileMenu}
-                  className={`block px-4 py-2 rounded-md ${
-                    location.pathname === "/nosotros"
-                      ? "text-primary-600 bg-primary-50"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  Nosotros
-                </Link>
-              </li>
-              <li>
-                <button
-                  onClick={toggleDropdown}
-                  className="w-full text-left px-4 py-2 rounded-md text-gray-700 hover:bg-gray-50 flex items-center justify-between"
-                >
-                  Productos
-                  <i
-                    className={`fas fa-chevron-down text-xs transition-transform ${
-                      dropdownOpen ? "rotate-180" : ""
-                    }`}
-                  ></i>
-                </button>
-                <ul
-                  className={`pl-4 space-y-1 overflow-hidden transition-all ${
-                    dropdownOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                  }`}
-                >
-                  <li>
-                    <Link
-                      to="/public-products"
-                      onClick={closeMobileMenu}
-                      className="block px-4 py-2 rounded-md text-sm font-semibold text-primary-600 hover:bg-primary-50 border-b border-gray-200"
-                    >
-                      Ver Todos los Productos
-                    </Link>
-                  </li>
-                  {PRODUCT_CATEGORIES.map((category) => (
-                    <li key={category.value}>
-                      <Link
-                        to={`/public-products?category=${category.slug}`}
-                        onClick={closeMobileMenu}
-                        className="block px-4 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-50"
-                      >
-                        {category.value}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            </ul>
-          </div>
+          <a href="#contacto" onClick={() => { setMobileMenuOpen(false); setDropdownOpen(false); }} className="public-nav-link">Contacto</a>
+        </nav>
+        <div className="flex items-center gap-2 sm:gap-5">
+          <div className="hidden border-l border-gray-200 pl-5 text-primary-700 xl:block"><span className="block text-xs font-semibold">CONTÁCTANOS</span><a href="tel:013576464" className="text-sm font-bold hover:underline">(01) 357-6464</a></div>
+          <Link to={isAuthenticated ? '/dashboard' : '/login'} className="btn btn-primary !px-3 sm:!px-5">{isAuthenticated ? 'Mi panel' : 'Iniciar sesión'}</Link>
+          <button type="button" className="flex h-11 w-11 items-center justify-center rounded-md border border-gray-200 text-primary-700 lg:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-expanded={mobileMenuOpen} aria-controls="main-navigation" aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d={mobileMenuOpen ? 'm6 6 12 12M6 18 18 6' : 'M4 6h16M4 12h16M4 18h16'} /></svg>
+          </button>
         </div>
       </div>
     </header>
@@ -265,4 +58,3 @@ const Header = () => {
 };
 
 export default Header;
-

@@ -1,4 +1,5 @@
-import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import Dialog from '../components/Dialog';
+import { useState, FormEvent, ChangeEvent } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { productAPI } from "../services/api";
@@ -159,7 +160,6 @@ const Products = () => {
   };
 
   const handleOpenModal = (product: Product | null = null): void => {
-    console.log("handleOpenModal llamado", { product });
     if (product) {
       setEditingProduct(product);
       setFormData({
@@ -188,7 +188,6 @@ const Products = () => {
       resetForm(selectedCategories.length > 0 ? selectedCategories[0] : "");
     }
     setShowModal(true);
-    console.log("showModal establecido a true");
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -237,7 +236,6 @@ const Products = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     
-    console.log("handleSubmit llamado", { formData, editingProduct });
 
     // Validación adicional
     if (!formData.name.trim()) {
@@ -308,11 +306,10 @@ const Products = () => {
           <h1 className="text-3xl font-bold text-gray-900">Productos</h1>
           <p className="mt-1 text-sm text-gray-500">Catálogo de productos</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-wrap gap-3">
           {canManageProducts && (
             <button
               onClick={() => {
-                console.log("Botón Crear Producto clickeado");
                 handleOpenModal();
               }}
               className="btn btn-primary"
@@ -325,7 +322,7 @@ const Products = () => {
             onClick={() => navigate("/dashboard")}
             className="btn btn-secondary"
           >
-            ← Volver al Dashboard
+            Volver al panel
           </button>
         </div>
       </div>
@@ -337,21 +334,24 @@ const Products = () => {
           {/* Botón para mostrar/ocultar filtros en móvil */}
           <button
             onClick={() => setShowFilters(!showFilters)}
+            aria-expanded={showFilters}
+            aria-controls="product-filters"
             className="lg:hidden w-full btn btn-secondary mb-4 flex items-center justify-between"
           >
             <span>Filtros</span>
-            <span>{showFilters ? "▲" : "▼"}</span>
+            <span>{showFilters ? "Ocultar" : "Mostrar"}</span>
           </button>
 
           {/* Panel de filtros */}
           <div
+            id="product-filters"
             className={`${
               showFilters ? "block" : "hidden"
-            } lg:block bg-white rounded-lg shadow p-4 space-y-6`}
+            } lg:block filter-panel space-y-6`}
           >
             {/* Filtros de Categorías */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b-2 border-red-500">
+              <h2 className="filter-title">
                 CATEGORÍAS
               </h2>
               <div className="space-y-2">
@@ -379,7 +379,7 @@ const Products = () => {
 
             {/* Filtros de Materiales */}
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-3 pb-2 border-b-2 border-red-500">
+              <h2 className="filter-title">
                 MATERIAL
               </h2>
               <div className="space-y-2">
@@ -406,7 +406,7 @@ const Products = () => {
         </aside>
 
         {/* Contenido principal */}
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {data?.data?.map((product) => (
           <div key={product.id} className="card">
@@ -415,7 +415,7 @@ const Products = () => {
                 <img
                   src={product.imageUrl}
                   alt={product.name}
-                  className="w-full h-48 object-cover rounded-lg bg-white"
+                  className="w-full h-48 object-contain bg-white"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     // Si la URL relativa falla, intentar con URL completa
@@ -442,7 +442,7 @@ const Products = () => {
                   className="text-primary-600 hover:text-primary-800 text-sm font-medium"
                   title="Editar producto"
                 >
-                  ✏️ Editar
+                  Editar
                 </button>
               )}
             </div>
@@ -472,17 +472,14 @@ const Products = () => {
 
       {/* Modal para crear/editar producto */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">
-              {editingProduct ? "Editar Producto" : "Crear Nuevo Producto"}
-            </h2>
+        <Dialog title={editingProduct ? "Editar producto" : "Crear producto"} onClose={handleCloseModal} busy={createProductMutation.isLoading || updateProductMutation.isLoading}
+          description="Completa los datos del producto. Los campos con * son obligatorios.">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="products-field-1" className="block text-sm font-medium text-gray-700 mb-1">
                   Nombre del Producto *
                 </label>
-                <input
+                <input id="products-field-1"
                   type="text"
                   className="input"
                   value={formData.name}
@@ -494,10 +491,10 @@ const Products = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="products-field-2" className="block text-sm font-medium text-gray-700 mb-1">
                   Descripción
                 </label>
-                <textarea
+                <textarea id="products-field-2"
                   className="input"
                   rows={3}
                   value={formData.description}
@@ -508,10 +505,10 @@ const Products = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="products-field-3" className="block text-sm font-medium text-gray-700 mb-1">
                   Categoría *
                 </label>
-                <select
+                <select id="products-field-3"
                   className="input"
                   value={formData.category}
                   onChange={(e) =>
@@ -529,10 +526,10 @@ const Products = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="products-field-4" className="block text-sm font-medium text-gray-700 mb-1">
                   Material *
                 </label>
-                <select
+                <select id="products-field-4"
                   className="input"
                   value={formData.material}
                   onChange={(e) =>
@@ -551,10 +548,10 @@ const Products = () => {
 
               {editingProduct && editingProduct.code && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="products-field-5" className="block text-sm font-medium text-gray-700 mb-1">
                     Código del Producto
                   </label>
-                  <input
+                  <input id="products-field-5"
                     type="text"
                     className="input bg-gray-100"
                     value={editingProduct.code}
@@ -568,7 +565,7 @@ const Products = () => {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="product-image-input" className="block text-sm font-medium text-gray-700 mb-1">
                   Imagen del Producto
                 </label>
                 <input
@@ -629,10 +626,10 @@ const Products = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="products-field-6" className="block text-sm font-medium text-gray-700 mb-1">
                   Umbral de Alerta (%) *
                 </label>
-                <input
+                <input id="products-field-6"
                   type="number"
                   step="0.1"
                   min="0"
@@ -682,12 +679,6 @@ const Products = () => {
                     createProductMutation.isLoading ||
                     updateProductMutation.isLoading
                   }
-                  onClick={(e) => {
-                    console.log("Botón submit clickeado", {
-                      isLoading: createProductMutation.isLoading || updateProductMutation.isLoading,
-                      formData,
-                    });
-                  }}
                 >
                   {createProductMutation.isLoading ||
                   updateProductMutation.isLoading
@@ -698,8 +689,7 @@ const Products = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

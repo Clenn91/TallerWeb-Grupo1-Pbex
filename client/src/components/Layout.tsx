@@ -1,4 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
+import BrandLogo from './BrandLogo';
 import { useAuth } from "../contexts/AuthContext";
 import { USER_ROLES } from "../utils/constants";
 
@@ -24,19 +25,19 @@ const Layout = () => {
     {
       path: "/dashboard",
       label: "Dashboard",
-      icon: "📊",
+      icon: "fa-chart-column",
       roles: [USER_ROLES.SUPERVISOR, USER_ROLES.ADMIN, USER_ROLES.MANAGEMENT],
     },
     {
       path: "/dashboard/quality/register",
       label: "Registro de Calidad",
-      icon: "📝",
+      icon: "fa-clipboard-check",
       roles: [USER_ROLES.ASSISTANT, USER_ROLES.SUPERVISOR, USER_ROLES.ADMIN],
     },
     {
       path: "/dashboard/certificates",
       label: "Certificados",
-      icon: "📄",
+      icon: "fa-file-lines",
       roles: [
         USER_ROLES.ASSISTANT,
         USER_ROLES.SUPERVISOR,
@@ -47,19 +48,19 @@ const Layout = () => {
     {
       path: "/dashboard/alerts",
       label: "Alertas",
-      icon: "🚨",
+      icon: "fa-bell",
       roles: [USER_ROLES.SUPERVISOR, USER_ROLES.ADMIN, USER_ROLES.MANAGEMENT],
     },
     {
       path: "/dashboard/non-conformities",
       label: "No Conformidades",
-      icon: "⚠️",
+      icon: "fa-triangle-exclamation",
       roles: [USER_ROLES.ASSISTANT, USER_ROLES.SUPERVISOR, USER_ROLES.ADMIN],
     },
     {
       path: "/dashboard/products",
       label: "Productos",
-      icon: "📦",
+      icon: "fa-box",
       roles: [
         USER_ROLES.ASSISTANT,
         USER_ROLES.SUPERVISOR,
@@ -70,7 +71,7 @@ const Layout = () => {
     {
       path: "/dashboard/users",
       label: "Usuarios",
-      icon: "👥",
+      icon: "fa-users",
       roles: [USER_ROLES.ADMIN, USER_ROLES.SUPERVISOR],
     },
   ];
@@ -84,53 +85,41 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-md">
+      <header className="border-t-4 border-primary-700 border-b border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
+          <div className="flex items-center justify-between gap-4 py-4">
+            <div className="flex min-w-0 items-center gap-5">
               <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-primary-600">
-                  Sistema Pbex
-                </h1>
+                <Link to="/" aria-label="PBEX · Volver al inicio"><BrandLogo className="!w-28 sm:!w-36" /></Link>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                {visibleMenuItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                      isActive(item.path)
-                        ? "border-primary-500 text-gray-900"
-                        : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                    }`}
-                  >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
+              <p className="hidden border-l border-gray-200 pl-5 text-sm font-semibold text-primary-700 md:block">Sistema de gestión de calidad</p>
             </div>
-            <div className="flex items-center gap-5 ml-8 sm:ml-16 pl-6 sm:pl-12 border-l border-gray-200 max-w-[12rem] sm:max-w-lg flex-shrink-0">
+            <div className="flex shrink-0 items-center gap-4">
               <div className="hidden sm:flex flex-col text-right leading-tight">
                 <span className="text-sm font-semibold text-gray-900 truncate max-w-[180px]">
                   {user?.fullName}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {getRoleLabel(user?.role)} ({user?.role})
+                  {getRoleLabel(user?.role)}
                 </span>
               </div>
-              <div className="sm:hidden text-xs text-gray-600 truncate max-w-[120px]">
-                {user?.fullName}
-              </div>
               <button onClick={logout} className="btn btn-secondary text-sm">
-                Cerrar Sesión
+                Cerrar sesión
               </button>
             </div>
           </div>
+          <nav aria-label="Navegación del sistema" className="-mb-px flex gap-5 overflow-x-auto">
+            {visibleMenuItems.map(item => (
+              <Link key={item.path} to={item.path} aria-current={isActive(item.path) ? 'page' : undefined}
+                className={`inline-flex min-h-12 shrink-0 items-center gap-2 border-b-2 px-1 text-sm font-semibold ${isActive(item.path) ? 'border-accent-500 text-primary-700' : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-primary-700'}`}>
+                <i className={`fas ${item.icon} text-sm`} aria-hidden="true" />{item.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-      </nav>
+      </header>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <main className="admin-content max-w-7xl mx-auto px-4 py-7 sm:px-6 lg:px-8">
         <Outlet />
       </main>
     </div>

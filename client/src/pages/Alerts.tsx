@@ -1,3 +1,4 @@
+import Dialog from '../components/Dialog';
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -115,10 +116,10 @@ const Alerts = () => {
         <h3 className="text-lg font-semibold mb-4">Filtros</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="alerts-field-1" className="block text-sm font-medium text-gray-700 mb-1">
               Estado
             </label>
-            <select
+            <select id="alerts-field-1"
               className="input w-full"
               value={filters.status}
               onChange={(e) =>
@@ -132,10 +133,10 @@ const Alerts = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="alerts-field-2" className="block text-sm font-medium text-gray-700 mb-1">
               Producto
             </label>
-            <select
+            <select id="alerts-field-2"
               className="input w-full"
               value={filters.productId}
               onChange={(e) =>
@@ -151,10 +152,10 @@ const Alerts = () => {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="alerts-field-3" className="block text-sm font-medium text-gray-700 mb-1">
               Tipo de Alerta
             </label>
-            <select
+            <select id="alerts-field-3"
               className="input w-full"
               value={filters.alertType}
               onChange={(e) =>
@@ -264,9 +265,8 @@ const Alerts = () => {
 
       {/* Modal de resolución */}
       {showResolveModal && selectedAlert && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">Resolver Alerta</h2>
+        <Dialog title={"Resolver alerta"} onClose={() => { setShowResolveModal(false); setSelectedAlert(null); setResolutionNotes(""); }} busy={resolveMutation.isLoading}
+          description="Revisa los datos y describe las acciones tomadas antes de confirmar.">
             <div className="mb-4">
               <p className="text-sm text-gray-600 mb-2">
                 <span className="font-medium">Producto:</span>{" "}
@@ -285,10 +285,10 @@ const Alerts = () => {
               </p>
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="alerts-field-4" className="block text-sm font-medium text-gray-700 mb-1">
                 Notas de Resolución *
               </label>
-              <textarea
+              <textarea id="alerts-field-4"
                 className="input w-full"
                 rows={4}
                 value={resolutionNotes}
@@ -320,8 +320,7 @@ const Alerts = () => {
                   : "Confirmar Resolución"}
               </button>
             </div>
-          </div>
-        </div>
+        </Dialog>
       )}
     </div>
   );

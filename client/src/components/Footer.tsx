@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { PRODUCT_CATEGORIES } from '../utils/constants';
+import BrandLogo from './BrandLogo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -21,9 +22,13 @@ const Footer = () => {
       .join(' ');
 
   return (
-    <footer className="footer bg-gray-900 text-white mt-auto">
+    <footer id="contacto" className="footer scroll-mt-40 bg-primary-700 text-white mt-auto">
       <div className="footer-top py-12">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-9 flex flex-col gap-5 border-b border-white/20 pb-8 md:flex-row md:items-center md:gap-12">
+            <Link to="/" className="shrink-0"><BrandLogo light /></Link>
+            <p className="max-w-2xl text-sm leading-relaxed text-primary-100">Somos líderes en la industria del plástico. Fabricamos productos de alta calidad con tecnología y una larga experiencia al servicio de nuestros clientes.</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Contacto */}
             <div className="footer-column">
@@ -130,7 +135,8 @@ const Footer = () => {
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="social-link w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary-600 transition-colors"
+                  aria-label="Facebook"
+                  className="social-link w-11 h-11 flex items-center justify-center border border-white/30 rounded-md hover:bg-primary-600 transition-colors"
                 >
                   <i className="fab fa-facebook-f"></i>
                 </a>
@@ -138,7 +144,8 @@ const Footer = () => {
                   href="#"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="social-link w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary-600 transition-colors"
+                  aria-label="Instagram"
+                  className="social-link w-11 h-11 flex items-center justify-center border border-white/30 rounded-md hover:bg-primary-600 transition-colors"
                 >
                   <i className="fab fa-instagram"></i>
                 </a>
@@ -155,16 +162,15 @@ const Footer = () => {
       </div>
 
       {/* Footer Bottom */}
-      <div className="footer-bottom border-t border-gray-800 py-6">
+      <div className="footer-bottom border-t border-white/20 py-6">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4 text-sm text-primary-100">
             <p>
               ©{currentYear} {company.name}. RUC {company.ruc}. Todos los derechos
               reservados.
             </p>
             <p className="flex items-center gap-1">
-              Desarrollado con <i className="fas fa-heart text-red-500"></i> por PBEX
-              Team
+              PBEX · Gestión de calidad
             </p>
           </div>
         </div>
